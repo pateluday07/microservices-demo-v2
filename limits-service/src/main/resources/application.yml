@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: limits-service
+  config:
+    import: "configserver:http://localhost:8888"
+  profiles:
+    active: dev #you can change this to `default` too
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+
+
