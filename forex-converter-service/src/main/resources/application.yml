@@ -18,3 +18,4 @@ resilience4j:
       converted-amount:
         maxAttempts: 5
         waitDuration: 1s
+        enableExponentialBackoff: true
