@@ -15,7 +15,7 @@ eureka:
 resilience4j:
   retry:
     instances:
-      converted-amount:
+      convert:
         maxAttempts: 5
         waitDuration: 1s
         enableExponentialBackoff: true

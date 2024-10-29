@@ -25,7 +25,7 @@ public class CurrencyConverterServiceImpl implements CurrencyConverterService {
     private final ExchangeRatesFeignService exchangeRatesFeignService;
 
     @Override
-    @Retry(name = "converted-amount", fallbackMethod = "fallBackConverter")
+    @Retry(name = "convert", fallbackMethod = "fallBackConverter")
     public CurrencyConverterDto convert(String from, String to, BigDecimal amount) {
         log.info("Converting {} To {} For The Amount {}", from, to, amount);
         CurrencyConverterDto converterDto = exchangeRatesFeignService.getExchangeRate(from, to);
