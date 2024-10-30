@@ -5,6 +5,7 @@ import com.pateluday07.microservicies.v2.forex_converter_service.dto.CurrencyCon
 import com.pateluday07.microservicies.v2.forex_converter_service.feign.ExchangeRatesFeignService;
 import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +29,7 @@ public class CurrencyConverterServiceImpl implements CurrencyConverterService {
     @Override
     @Retry(name = "convert", fallbackMethod = "fallBackConverter")
     @CircuitBreaker(name = "default", fallbackMethod = "fallBackConverter")
+    @RateLimiter(name = "default")
     public CurrencyConverterDto convert(String from, String to, BigDecimal amount) {
         log.info("Converting {} To {} For The Amount {}", from, to, amount);
         CurrencyConverterDto converterDto;

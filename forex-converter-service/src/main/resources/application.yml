@@ -19,3 +19,8 @@ resilience4j:
         maxAttempts: 5
         waitDuration: 1s
         enableExponentialBackoff: true
+  rateLimiter:
+    instances:
+      default:
+        limitForPeriod: 10
+        limitRefreshPeriod: 10s
