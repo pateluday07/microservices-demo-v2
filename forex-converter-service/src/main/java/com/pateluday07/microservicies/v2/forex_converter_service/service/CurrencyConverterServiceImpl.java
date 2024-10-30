@@ -30,7 +30,16 @@ public class CurrencyConverterServiceImpl implements CurrencyConverterService {
     @CircuitBreaker(name = "default", fallbackMethod = "fallBackConverter")
     public CurrencyConverterDto convert(String from, String to, BigDecimal amount) {
         log.info("Converting {} To {} For The Amount {}", from, to, amount);
-        CurrencyConverterDto converterDto = exchangeRatesFeignService.getExchangeRate(from, to);
+        CurrencyConverterDto converterDto;
+        try {
+            converterDto = exchangeRatesFeignService.getExchangeRate(from, to);
+        } catch (FeignException feignException) {
+            if (HttpStatus.NOT_FOUND.value() == feignException.status()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sorry The Conversion Rate Is Not Available For "
+                        .concat(from).concat(" To ").concat(to).concat(" So We Can Not Provide The Converted Amount"));
+            }
+            throw feignException;
+        }
         log.info("Got Exchange Rate From The Forex Service {}", converterDto);
         converterDto.setAmount(amount);
         converterDto.setPort(port);
@@ -38,11 +47,8 @@ public class CurrencyConverterServiceImpl implements CurrencyConverterService {
         return converterDto;
     }
 
-    private CurrencyConverterDto fallBackConverter(String from, String to, BigDecimal amount, Throwable cause) {
-        if (cause instanceof FeignException feignException && HttpStatus.NOT_FOUND.value() == feignException.status()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sorry The Conversion Rate Is Not Available For "
-                    .concat(from).concat(" To ").concat(to).concat(" So We Can Not Provide The Converted Amount"), cause);
-        }
+    private CurrencyConverterDto fallBackConverter(String from, String to, BigDecimal amount, Throwable cause) throws ResponseStatusException {
+        if (cause instanceof ResponseStatusException responseStatusException) throw responseStatusException;
         CurrencyConverterDto converterDto = new CurrencyConverterDto();
         converterDto.setFrom(from);
         converterDto.setTo(to);
