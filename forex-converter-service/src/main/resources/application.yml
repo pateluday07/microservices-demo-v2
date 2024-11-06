@@ -1,6 +1,12 @@
 spring:
   application:
     name: forex-converter-service
+  zipkin:
+    enabled: true
+    base-url: http://localhost:9411
+    sleuth:
+      tracing:
+        enabled: true
 
 server:
   port: 8000
@@ -29,3 +35,16 @@ resilience4j:
       default:
         maxConcurrentCalls: 10
         maxQueueSize: 10
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+feign:
+  trace:
+    enabled: true
