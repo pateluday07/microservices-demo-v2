@@ -13,6 +13,18 @@ services:
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
 
+  forex-converter:
+    image: uday07/miv2-forex-converter-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - forex-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
+
   naming-server:
     image: uday07/miv2-naming-server:0.0.1-SNAPSHOT
     mem_limit: 700m
