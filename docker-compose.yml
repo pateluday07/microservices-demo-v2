@@ -12,6 +12,7 @@ services:
       - naming-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
 
   forex-converter:
     image: uday07/miv2-forex-converter-service:0.0.1-SNAPSHOT
@@ -24,6 +25,7 @@ services:
       - naming-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
 
   api-gateway:
     image: uday07/miv2-api-gateway:0.0.1-SNAPSHOT
@@ -36,6 +38,7 @@ services:
       - naming-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
 
   naming-server:
     image: uday07/miv2-naming-server:0.0.1-SNAPSHOT
@@ -44,6 +47,15 @@ services:
       - "8761:8761"
     networks:
       - forex-network
+
+  zipkin-server:
+    image: openzipkin/zipkin:3
+    mem_limit: 300m
+    ports:
+      - "9411:9411"
+    networks:
+      - forex-network
+    restart: always
 
 networks:
   forex-network:
