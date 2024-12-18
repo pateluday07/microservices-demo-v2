@@ -10,9 +10,10 @@ services:
       - forex-network
     depends_on:
       - naming-server
+      - zipkin-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
-      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
 
   forex-converter:
     image: uday07/miv2-forex-converter-service:0.0.1-SNAPSHOT
@@ -23,9 +24,10 @@ services:
       - forex-network
     depends_on:
       - naming-server
+      - zipkin-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
-      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
 
   api-gateway:
     image: uday07/miv2-api-gateway:0.0.1-SNAPSHOT
@@ -36,9 +38,10 @@ services:
       - forex-network
     depends_on:
       - naming-server
+      - zipkin-server
     environment:
       EUREKA.CLIENT.SERVICE-URL.DEFAULTZONE: http://naming-server:8761/eureka
-      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
 
   naming-server:
     image: uday07/miv2-naming-server:0.0.1-SNAPSHOT
@@ -55,6 +58,7 @@ services:
       - "9411:9411"
     networks:
       - forex-network
+    restart: always
 
 networks:
   forex-network:
