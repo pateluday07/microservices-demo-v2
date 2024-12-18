@@ -55,7 +55,6 @@ services:
       - "9411:9411"
     networks:
       - forex-network
-    restart: always
 
 networks:
   forex-network:
